@@ -3,23 +3,15 @@
 #include <SOIL/SOIL.h>
 #include <bits/stdc++.h>
 #include "estruturasPrincipais.h"
-#include "labirinto.h"
-#include "personagem.h"
+#include "mapa.h"
 using namespace std;
-
-//labirinto
-Labirinto *maze = new Labirinto();
-
-// personagem
-Movimento *pers = new Movimento();
 
 
 //func de desenha na tela
 void desenhaTela(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glColor4f(1,1,1,1);
-	pers->desenhaPersonagem();
-	maze->desenhaLabirinto();
+
 	glutSwapBuffers();
 }
 
@@ -34,21 +26,6 @@ void ajustaTela(int NewWidth,int NewHeight){
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
-	///
-	// glMatrixMode(GL_PROJECTION);
-	// glLoadIdentity();
-	// if(width>height){
-	// 	glViewport((width-height)/2,0,height,height);
-	// }
-	// if(height>width){
-	// 	glViewport(0,(height-width)/2,width,width);
-	// }
-	// glMatrixMode(GL_PROJECTION);
-	// //define eixo x,y
-	// glOrtho(ESQUERDA_TELA,DIREITA_TELA,FUNDO_TELA,TOPO_TELA,-1,1);
-	// glMatrixMode(GL_MODELVIEW);
-	//
 }
 
 //teclas de suporte no jogo
@@ -65,12 +42,6 @@ void teclasJogoEsp(int tecla, int x, int y){
 			break;
 		case GLUT_KEY_DOWN:
 			pers->mudaSentido(baixo);
-			break;
-		case GLUT_KEY_LEFT:
-			pers->mudaSentido(esquerda);
-			break;
-		case GLUT_KEY_RIGHT:
-			pers->mudaSentido(direita);
 			break;
 		default:
 			break;

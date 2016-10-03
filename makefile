@@ -1,7 +1,7 @@
 CC = g++
 OPCOES_COMPILADOR= -lglut -lGLU -lGLEW -lSOIL -lsfml-audio -lGL
-TODOS_ARQUIVOS_PONTOH = estruturasPrincipais.h
-TODOS_ARQUIVOS_OBJ = main.o
+TODOS_ARQUIVOS_PONTOH = estruturasPrincipais.h mapa.h
+TODOS_ARQUIVOS_OBJ = main.o mapa.o
 
 %.o: ../%.cpp $(TODOS_ARQUIVOS_PONTOH)
 	$(CC) -o $@ -c $< $(OPCOES_COMPILADOR)

@@ -5,13 +5,14 @@ class Obstaculo{
 	public:
 		Obstaculo(float x,float y,float largura,float altura);
 		void desenhaObstaculo();
+		ponto getCoord();
+		float getLargura();
+		float getAltura();
 };
 
 class Mapa{
-	private:
-		std::vector<Obstaculo> vParedes;
 	public:
 		//Mapa(std::string textura);
 		Mapa();
-		void desenhaObstaculos(bool desenha, std::vector<Obstaculo> v);
+		void desenhaObstaculos(bool desenha, std::vector<Obstaculo>vParedes);
 };

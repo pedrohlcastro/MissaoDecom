@@ -37,9 +37,8 @@ float Obstaculo::getAltura(){
 	return this->altura;
 }
 
-void desenhaObstaculo(bool desenha, std::vector<Obstaculo> v){
-	this->vParedes = v;
-	for(int i=0; i<this->vParedes.size(); i++){
-		this->vParedes[i]->desenhaObstaculo;
+void Mapa::desenhaObstaculos(bool desenha, std::vector<Obstaculo> vParedes){
+	for(int i=0; i < vParedes.size(); i++){
+		vParedes[i].desenhaObstaculo();
 	}
 }

@@ -4,14 +4,18 @@
 #include <bits/stdc++.h>
 #include "estruturasPrincipais.h"
 #include "mapa.h"
+#include "personagem.h"
 using namespace std;
 
+// personagem
+Movimento *pers = new Movimento();
 
 //func de desenha na tela
 void desenhaTela(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glColor4f(1,1,1,1);
 
+	pers->desenhaPersonagem();
 	glutSwapBuffers();
 }
 
@@ -38,10 +42,8 @@ void teclasJogo(unsigned char tecla,int x,int y){
 void teclasJogoEsp(int tecla, int x, int y){
 	switch (tecla) {
 		case GLUT_KEY_UP:
-			pers->mudaSentido(cima);
 			break;
 		case GLUT_KEY_DOWN:
-			pers->mudaSentido(baixo);
 			break;
 		default:
 			break;
@@ -50,11 +52,7 @@ void teclasJogoEsp(int tecla, int x, int y){
 }
 
 void update(int k){
-	perso p = pers->getCoord();
-	if (maze->verificaColisao(&p))
-		pers->mudaSentido(parado);
-	else
-		pers->move();
+	pers->move();
 	glutPostRedisplay();
 	glutTimerFunc(0, update, 0);
 }
@@ -67,7 +65,7 @@ int main(int argc, char **argv){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 
 	//tamanho da tela
-	glutInitWindowSize(700,700);
+	glutInitWindowSize(700,300);
 	glutCreateWindow("PacDecom");
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 

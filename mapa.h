@@ -1,5 +1,5 @@
 class Obstaculo{
-	private:
+	public:
 		ponto pontoObstaculo;
 		int altura,largura;
 	public:
@@ -14,5 +14,6 @@ class Mapa{
 	public:
 		//Mapa(std::string textura);
 		Mapa();
-		void desenhaObstaculos(bool desenha, std::vector<Obstaculo>vParedes);
+		void desenhaObstaculos(std::vector<Obstaculo>vParedes);
+		std::vector<Obstaculo> move (std::vector<Obstaculo> vParedes);
 };

@@ -5,6 +5,5 @@ class Movimento{
 	public:
         Movimento();
         ponto getCoord();
-        void move();
         void desenhaPersonagem();
 };

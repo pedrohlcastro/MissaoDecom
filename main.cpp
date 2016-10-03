@@ -7,14 +7,21 @@
 #include "personagem.h"
 using namespace std;
 
+
+//Mapa
+Mapa *mapa = new Mapa();
+
 // personagem
 Movimento *pers = new Movimento();
+
+//Obstaculos
+vector<Obstaculo> vParedes;
 
 //func de desenha na tela
 void desenhaTela(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glColor4f(1,1,1,1);
-
+	mapa->desenhaObstaculos(vParedes);
 	pers->desenhaPersonagem();
 	glutSwapBuffers();
 }
@@ -52,20 +59,30 @@ void teclasJogoEsp(int tecla, int x, int y){
 }
 
 void update(int k){
-	pers->move();
+	vParedes = mapa->move(vParedes);
 	glutPostRedisplay();
 	glutTimerFunc(0, update, 0);
 }
 
+void criaObstaculo(int k){
+	int randomX,randomLargura;
+	randomX = rand() % 50  + DIREITA_TELA;
+	randomLargura = 10*(1 + rand() % 3);
+	Obstaculo *o = new Obstaculo(randomX,CENTRO,randomLargura,ALTURA);
+	vParedes.push_back(*o);
+	glutTimerFunc(10000,criaObstaculo,0);
+}
+
 int main(int argc, char **argv){
 	//INIT
+	srand(time(0));
 	glutInit(&argc,argv);
 	glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
 	//usando buffer duplo
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 
 	//tamanho da tela
-	glutInitWindowSize(700,300);
+	glutInitWindowSize(700,700);
 	glutCreateWindow("PacDecom");
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
@@ -75,6 +92,7 @@ int main(int argc, char **argv){
 	glutKeyboardFunc(teclasJogo);
 	glutSpecialFunc(teclasJogoEsp);
 	glutTimerFunc(0, update, 0);
+	glutTimerFunc(500,criaObstaculo,1);
 	glutMainLoop();
 	return 0;
 }

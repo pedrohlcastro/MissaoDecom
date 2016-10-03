@@ -30,7 +30,3 @@ void Movimento::desenhaPersonagem(){
 	glPopMatrix();
 }
 
-
-void Movimento::move (){
-	this->pontos.x += PASSO_DO_PERSONAGEM;
-}

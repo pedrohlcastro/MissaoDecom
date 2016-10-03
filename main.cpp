@@ -7,7 +7,7 @@
 #include "personagem.h"
 using namespace std;
 
-
+int tempo = 0;
 //Mapa
 Mapa *mapa = new Mapa();
 
@@ -49,16 +49,37 @@ void teclasJogo(unsigned char tecla,int x,int y){
 void teclasJogoEsp(int tecla, int x, int y){
 	switch (tecla) {
 		case GLUT_KEY_UP:
+			pers->incPontoY(0.01);
+			pers->mudaSituacao(cima);
 			break;
 		case GLUT_KEY_DOWN:
+			pers->mudaSituacao(baixo);
 			break;
 		default:
 			break;
 	}
 
+	cout << pers->getSituacao() << endl;
+}
+
+void teclasJogoEspOcioso(int tecla, int x, int y){
+	switch (tecla) {
+		case GLUT_KEY_UP:
+			pers->mudaSituacao(normal);
+			break;
+		case GLUT_KEY_DOWN:
+			pers->mudaSituacao(normal);
+			break;
+		default:
+			break;
+	}
+
+	cout << pers->getSituacao() << endl;
 }
 
 void update(int k){
+	tempo++;
+
 	vParedes = mapa->move(vParedes);
 	glutPostRedisplay();
 	glutTimerFunc(0, update, 0);
@@ -91,6 +112,8 @@ int main(int argc, char **argv){
 	glutReshapeFunc(ajustaTela);
 	glutKeyboardFunc(teclasJogo);
 	glutSpecialFunc(teclasJogoEsp);
+	glutSpecialUpFunc(teclasJogoEspOcioso);
+
 	glutTimerFunc(0, update, 0);
 	glutTimerFunc(500,criaObstaculo,1);
 	glutMainLoop();

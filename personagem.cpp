@@ -4,6 +4,7 @@
 #include <bits/stdc++.h>
 #include "estruturasPrincipais.h"
 #include "personagem.h"
+#include "mapa.h"
 using namespace std;
 
 //construtor da classe movimento
@@ -22,18 +23,39 @@ void Movimento::incPontoY(float inc){
 
 void Movimento::pula(){
 	cout << "x " << this->pontos.x << "y " << this->pontos.y << endl;
-	if (this->pontos.y > 0 && this->pontos.y < this->alturaPulo){
-		this->pontos.y += 0.6 - this->gravidadePulo;
+	if (this->pontos.y > 0 && this->pontos.y <= this->alturaPulo){
+		this->pontos.y += 8 - this->gravidadePulo;
 		this->gravidadePulo += 0.18;
 	}
-	if (this->pontos.y < 0){
+	if (this->pontos.y <= 0){
 		this->gravidadePulo = 0;
 		this->pontos.y = 0;
+
 	}
-	if (this->pontos.y >= this->alturaPulo){ // CASO ELE CHEGUE NO LIM ESTABELECIDO, CAI.
-		this->pontos.y -= 0.6;
+	if (this->pontos.y > this->alturaPulo){ // CASO ELE CHEGUE NO LIM ESTABELECIDO, CAI.
+		this->pontos.y -= 4;
 	}
+
 }
+
+bool Movimento::verificaColisao(vector<Obstaculo> vParedes){
+	for (int i = 0; i < vParedes.size(); i++){
+		// colisao por cima
+		if (this->y + this->comprimento + PASSO_DO_PERSONAGEM > vParedes[i].getCoord().y && this->y + PASSO_DO_PERSONAGEM < vParedes[i].getCoord().y + vParedes[i].getAltura()){
+			if (!(this->x + this->comprimento <= vParedes[i].getCoord().x || this->x >= vParedes[i].getCoord().x + vParedes[i].getLargura()))
+				return true;
+		}
+
+		// colisao pelo lado esquerdo
+		if (this->x - PASSO_DO_PERSONAGEM > vParedes[i].getCoord().x && this->x - PASSO_DO_PERSONAGEM < vParedes[i].getCoord().x + vParedes[i].getLargura()){
+			if (!(this->y + this->comprimento <= vParedes[i].getCoord().y || this->y >= vParedes[i].getCoord().y + vParedes[i].getAltura()))
+				return true;
+		}
+	}
+
+	return false;
+}
+
 
 Sentido Movimento::getSituacao (){
 	return this->situacao;
@@ -48,6 +70,7 @@ ponto Movimento::getCoord(){
 }
 
 void Movimento::desenhaPersonagem(){
+
 	Movimento::pula();
 
 	glPushMatrix();

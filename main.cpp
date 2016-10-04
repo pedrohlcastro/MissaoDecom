@@ -79,6 +79,8 @@ void teclasJogoEspOcioso(int tecla, int x, int y){
 
 void update(int k){
 	tempo++;
+	// if (maze->verificaColisao(&p))
+	// 	pers->mudaSentido(parado);
 
 	vParedes = mapa->move(vParedes);
 	glutPostRedisplay();

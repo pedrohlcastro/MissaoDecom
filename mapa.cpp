@@ -14,6 +14,7 @@ Obstaculo::Obstaculo(float x,float y,float largura,float altura){
 	this->altura = altura;
 }
 
+
 //desenha paredes
 void Obstaculo::desenhaObstaculo(){
 	glPushMatrix();
@@ -26,6 +27,7 @@ void Obstaculo::desenhaObstaculo(){
 		glEnd();
 	glPopMatrix();
 }
+
 
 ponto Obstaculo::getCoord(){
 	return this->pontoObstaculo;

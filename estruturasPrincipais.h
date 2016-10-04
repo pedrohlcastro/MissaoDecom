@@ -6,7 +6,7 @@
 #define CENTRO 0
 #define ALTURA 20
 #define PASSO_DO_PERSONAGEM 0.001
-enum Sentido {normal, cima, baixo};
+enum Sentido {normal, cima, baixo, perdeu};
 
 
 //estrutura de ponto ou cordenada

@@ -13,4 +13,5 @@ class Movimento{
         void desenhaPersonagem();
 		void pula();
 		void mudaSituacao(Sentido situacao);
+		bool verificaColisao(std::vector<Obstaculo> vParedes);
 };

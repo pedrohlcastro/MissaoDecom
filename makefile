@@ -1,10 +1,10 @@
 CC = g++
-OPCOES_COMPILADOR= -lglut -lGLU -lGLEW -lSOIL -lsfml-audio -lGL 
+OPCOES_COMPILADOR= -lSOIL -lGL -lglut -lGLEW -lsfml-audio 
 TODOS_ARQUIVOS_PONTOH = estruturasPrincipais.h mapa.h personagem.h tela.h
 TODOS_ARQUIVOS_OBJ = main.o mapa.o personagem.o tela.o
 
 %.o: ../%.cpp $(TODOS_ARQUIVOS_PONTOH)
-	$(CC) -o $@ -c $< $(OPCOES_COMPILADOR)
+	$(CC) $(OPCOES_COMPILADOR) -o  $@ -c $<
 
 all: $(TODOS_ARQUIVOS_OBJ)
 	$(CC) -o main $^ $(OPCOES_COMPILADOR)

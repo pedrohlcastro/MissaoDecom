@@ -22,15 +22,9 @@ vector<Obstaculo> vParedes;
 Tela *controleTela;
 
 void init(){
-	int tamanho = 1;
-	char enderecoTexturas[30][30];
-	strcpy(enderecoTexturas[tamanho-1],"img/teste.jpg");
-	controleTela = new Tela(enderecoTexturas,tamanho);
-	printf("OPS\n");
-	printf("Tela - %d",controleTela->getTela());
-	// std::vector<string> enderecoTexturas;
-	// enderecoTexturas.push_back("img/banana.png");
-	// controleTela = new Tela(enderecoTexturas);
+	std::vector<string> enderecoTexturas;
+	enderecoTexturas.push_back("img/banana.png");
+	controleTela = new Tela(enderecoTexturas);
 }
 
 //func de desenha na tela
@@ -130,7 +124,7 @@ void update(int k){
 int main(int argc, char **argv){
 	//INIT
 	srand(time(0));
-	init();
+	
 	glutInit(&argc,argv);
 	glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
 	//usando buffer duplo
@@ -139,6 +133,7 @@ int main(int argc, char **argv){
 	//tamanho da tela
 	glutInitWindowSize(700,700);
 	glutCreateWindow("PacDecom");
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
 	//callbacks
@@ -147,6 +142,7 @@ int main(int argc, char **argv){
 	glutKeyboardFunc(teclasJogo);
 	glutSpecialFunc(teclasJogoEsp);
 	glutSpecialUpFunc(teclasJogoEspOcioso);
+	init();
 
 	glutTimerFunc(0, update, 0);
 	

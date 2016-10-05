@@ -7,23 +7,19 @@
 using namespace std;
 
 //constutor para telas
-Tela::Tela(char endTexturas[30][30], int tamanho){
-// Tela::Tela(vector<string>endTexturas){
-	//printf("NEM AQ\n");
-	for(int i=0; i<tamanho; i++){
+Tela::Tela(vector<string>endTexturas){
+	for(int i=0; i<endTexturas.size(); i++){
 		this->texturas[i] = SOIL_load_OGL_texture(
-		    "img/banan.png",
+		    endTexturas[i].c_str(),
 			SOIL_LOAD_AUTO,
-			SOIL_CREATE_NEW_ID,
-			SOIL_FLAG_INVERT_Y
+	    	SOIL_CREATE_NEW_ID,
+	    	SOIL_FLAG_INVERT_Y
  		);
  		if (this->texturas[i] == 0 ) {
     		printf("Erro carregando textura: '%s'\n", SOIL_last_result());
     		cout<<endTexturas[i]<<endl;
   		}
-  		//printf("PLS\n");
 	}
-	//printf("MONTOU\n");
 	this->telaAtual = MENU;
 }
 
@@ -48,7 +44,7 @@ void Tela::desenhaTelaSprite(int spriteBegin,int spriteEnd){
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, this->texturas[this->telaAtual]);
 	glPushMatrix();
-		glTranslatef(-350 ,-350 ,0);
+		glTranslatef(-330 ,-350 ,0);
 		glBegin(GL_POLYGON);
 			glTexCoord2f(spriteBegin, 0); 			glVertex2f(0,0);
 			glTexCoord2f(spriteEnd, 0);				glVertex2f(700,0);

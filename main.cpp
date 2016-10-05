@@ -87,8 +87,7 @@ void teclasJogo(unsigned char tecla,int x,int y){
 void teclasJogoEsp(int tecla, int x, int y){
 	switch (tecla) {
 		case GLUT_KEY_UP:
-			pers->incPontoY(0.01);
-			pers->mudaSituacao(cima);
+			pers->incPontoY(0.02);
 			break;
 		case GLUT_KEY_DOWN:
 			pers->mudaSituacao(baixo);
@@ -117,8 +116,10 @@ void teclasJogoEspOcioso(int tecla, int x, int y){
 
 void update(int k){
 	tempo++;
-	// if (maze->verificaColisao(&p))
-	// 	pers->mudaSentido(parado);
+	if (pers->verificaColisao(vParedes)) // temporário
+	controleTela->setTela(MENU);
+
+		// pers->mudaSentido(parado);
 
 	vParedes = mapa->move(vParedes);
 	glutPostRedisplay();
@@ -130,7 +131,6 @@ void update(int k){
 int main(int argc, char **argv){
 	//INIT
 	srand(time(0));
-	init();
 	glutInit(&argc,argv);
 	glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
 	//usando buffer duplo
@@ -148,8 +148,9 @@ int main(int argc, char **argv){
 	glutSpecialFunc(teclasJogoEsp);
 	glutSpecialUpFunc(teclasJogoEspOcioso);
 
+	init();
 	glutTimerFunc(0, update, 0);
-	
+
 	glutMainLoop();
 	return 0;
 }

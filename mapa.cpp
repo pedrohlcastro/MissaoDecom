@@ -41,15 +41,20 @@ float Obstaculo::getAltura(){
 
 std::vector<Obstaculo> Mapa::move (std::vector<Obstaculo> vParedes){
 	for(int i=0; i < vParedes.size(); i++){
-		vParedes[i].pontoObstaculo.x -= PASSO_DO_PERSONAGEM;
+		vParedes[i].pontoObstaculo.x -= 10*PASSO_DO_PERSONAGEM;
 		if(vParedes[i].pontoObstaculo.x < ESQUERDA_TELA - 5){//5 de erro
 			vParedes.erase(vParedes.begin()+i);
+			this->pontuacao += 20;
 		}
 	}
 	return vParedes;
 }
 
 Mapa::Mapa(){}
+
+int Mapa::getPontuacao(){
+	return this->pontuacao;
+}
 
 void Mapa::desenhaObstaculos(std::vector<Obstaculo> vParedes){
 	for(int i=0; i < vParedes.size(); i++){

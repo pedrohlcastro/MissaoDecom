@@ -53,10 +53,8 @@ bool Movimento::verificaColisao(vector<Obstaculo> vParedes){
 				return true;
 		}
 	}
-
 	return false;
 }
-
 
 Sentido Movimento::getSituacao (){
 	return this->situacao;

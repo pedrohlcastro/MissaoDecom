@@ -21,6 +21,15 @@ vector<Obstaculo> vParedes;
 //Telas
 Tela *controleTela;
 
+void escreveTexto(void * font, string s, float x, float y, float z){
+    int i;
+    glRasterPos3f(x, y, z);
+
+    for (i=0; i < s.size(); i++)
+       glutBitmapCharacter(font, s[i]);
+}
+
+
 void init(){
 	std::vector<string> enderecoTexturas;
 	enderecoTexturas.push_back("img/banana.png");
@@ -31,6 +40,15 @@ void init(){
 void desenhaTela(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glColor4f(1,1,1,1);
+
+	// escreve pontuação (PASSAR PARA ORIENTAÇÃO)
+	string pontos;
+	ostringstream convert;
+	convert << mapa->getPontuacao();
+	pontos = convert.str();
+	escreveTexto(GLUT_BITMAP_HELVETICA_18, pontos, 250, 300, 0);
+	// fim escreve pontuação
+
 	switch(controleTela->getTela()){
 		case MENU:
 			controleTela->desenhaTela();
@@ -99,6 +117,7 @@ void teclasJogoEspOcioso(int tecla, int x, int y){
 			pers->mudaSituacao(normal);
 			break;
 		case GLUT_KEY_DOWN:
+			cout << mapa->getPontuacao() << endl;
 			pers->mudaSituacao(normal);
 			break;
 		default:
@@ -114,7 +133,6 @@ void update(int k){
 	controleTela->setTela(MENU);
 
 		// pers->mudaSentido(parado);
-
 	vParedes = mapa->move(vParedes);
 	glutPostRedisplay();
 	glutTimerFunc(0, update, 0);

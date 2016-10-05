@@ -33,7 +33,7 @@ void Tela::desenhaTela(){
 			glTexCoord2f(0, 0); 			glVertex2f(0,0);
 			glTexCoord2f(1, 0);				glVertex2f(700,0);
 			glTexCoord2f(1, 1); 			glVertex2f(700,700);
-			glTexCoord2f(0, 1);				glVertex2f(0,700);			
+			glTexCoord2f(0, 1);				glVertex2f(0,700);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
@@ -49,7 +49,7 @@ void Tela::desenhaTelaSprite(int spriteBegin,int spriteEnd){
 			glTexCoord2f(spriteBegin, 0); 			glVertex2f(0,0);
 			glTexCoord2f(spriteEnd, 0);				glVertex2f(700,0);
 			glTexCoord2f(spriteEnd, 1); 			glVertex2f(700,700);
-			glTexCoord2f(spriteBegin, 1);			glVertex2f(0,700);			
+			glTexCoord2f(spriteBegin, 1);			glVertex2f(0,700);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 	glPopMatrix();

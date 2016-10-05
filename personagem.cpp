@@ -14,7 +14,7 @@ Movimento::Movimento(){
 	this->pontos.y = 0;
 	this->comprimento = 20;
 	this->gravidadePulo = 1.5;
-	this->alturaPulo = 80;
+	this->alturaPulo = 100;
 	this->situacao = normal;
 }
 
@@ -25,8 +25,8 @@ void Movimento::incPontoY(float inc){
 void Movimento::pula(){
 	cout << "x " << this->pontos.x << "y " << this->pontos.y << endl;
 	if (this->pontos.y > 0 && this->pontos.y <= this->alturaPulo){
-		this->pontos.y += 8 - this->gravidadePulo;
-		this->gravidadePulo += 0.18;
+		this->pontos.y += 12 - this->gravidadePulo;
+		this->gravidadePulo += 1;
 	}
 	if (this->pontos.y <= 0){
 		this->gravidadePulo = 0;
@@ -34,9 +34,9 @@ void Movimento::pula(){
 
 	}
 	if (this->pontos.y > this->alturaPulo){ // CASO ELE CHEGUE NO LIM ESTABELECIDO, CAI.
-		this->pontos.y -= 4;
+		this->pontos.y -= 3;
+		this->situacao = normal;
 	}
-
 }
 
 bool Movimento::verificaColisao(vector<Obstaculo> vParedes){

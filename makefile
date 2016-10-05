@@ -1,7 +1,7 @@
 CC = g++
-OPCOES_COMPILADOR= -lglut -lGLU -lGLEW -lSOIL -lsfml-audio -lGL
-TODOS_ARQUIVOS_PONTOH = estruturasPrincipais.h mapa.h personagem.h
-TODOS_ARQUIVOS_OBJ = main.o mapa.o personagem.o
+OPCOES_COMPILADOR= -lglut -lGLU -lGLEW -lSOIL -lsfml-audio -lGL 
+TODOS_ARQUIVOS_PONTOH = estruturasPrincipais.h mapa.h personagem.h tela.h
+TODOS_ARQUIVOS_OBJ = main.o mapa.o personagem.o tela.o
 
 %.o: ../%.cpp $(TODOS_ARQUIVOS_PONTOH)
 	$(CC) -o $@ -c $< $(OPCOES_COMPILADOR)
@@ -12,7 +12,6 @@ all: $(TODOS_ARQUIVOS_OBJ)
 run: all
 	./main
 	# Jogue com carinho!
-	# GG EZ kappa CYKA
 
 install:
 	sudo apt-get install build-essential

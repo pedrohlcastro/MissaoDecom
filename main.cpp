@@ -152,7 +152,7 @@ void teclasJogoEspOcioso(int tecla, int x, int y){
 
 void update(int k){
 	tempo++;
-	cout<<vParedes.size()<<endl;
+	//cout<<vParedes.size()<<endl;
 	//temporário
 	if(pers->verificaColisao(vParedes)){
 		inGame = false;

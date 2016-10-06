@@ -5,8 +5,10 @@ class Movimento{
 		float comprimento;
 		int gravidadePulo;
 		int alturaPulo;
+		int textura;
 	public:
         Movimento();
+        Movimento(std::string textura);
         ponto getCoord();
 		Sentido getSituacao();
 		void incPontoY(float inc);

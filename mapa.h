@@ -18,5 +18,6 @@ class Mapa{
 		Mapa();
 		int getPontuacao();
 		void desenhaObstaculos(std::vector<Obstaculo>vParedes);
+		void zeraPontuacao();
 		std::vector<Obstaculo> move (std::vector<Obstaculo> vParedes);
 };

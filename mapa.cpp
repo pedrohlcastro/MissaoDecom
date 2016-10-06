@@ -50,7 +50,9 @@ std::vector<Obstaculo> Mapa::move (std::vector<Obstaculo> vParedes){
 	return vParedes;
 }
 
-Mapa::Mapa(){}
+Mapa::Mapa(){
+	this->pontuacao = 0;
+}
 
 int Mapa::getPontuacao(){
 	return this->pontuacao;
@@ -61,4 +63,8 @@ void Mapa::desenhaObstaculos(std::vector<Obstaculo> vParedes){
 		// printf("i=%d x=%f y=%f\n",i,vParedes[i].pontoObstaculo.x,vParedes[i].pontoObstaculo.y );
 		vParedes[i].desenhaObstaculo();
 	}
+}
+
+void Mapa::zeraPontuacao(){
+	this->pontuacao = 0;
 }

@@ -9,6 +9,8 @@
 using namespace std;
 
 int tempo = 0;
+bool pause = false;
+bool inGame = false; //caso esteja jogando
 //Mapa
 Mapa *mapa = new Mapa();
 
@@ -32,13 +34,14 @@ void escreveTexto(void * font, string s, float x, float y, float z){
 
 void init(){
 	std::vector<string> enderecoTexturas;
-	enderecoTexturas.push_back("img/banana.png");
+	enderecoTexturas.push_back("img/print2.png");
 	controleTela = new Tela(enderecoTexturas);
 }
 
 //func de desenha na tela
 void desenhaTela(){
 	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_BLEND);
 	glColor4f(1,1,1,1);
 
 	// escreve pontuação (PASSAR PARA ORIENTAÇÃO)
@@ -64,11 +67,13 @@ void desenhaTela(){
 //funcao que cria obstaculos de tempo em tempo
 void criaObstaculo(int k){
 	int randomX,randomLargura;
-	randomX = rand() % 50  + DIREITA_TELA;
-	randomLargura = 10*(1 + rand() % 3);
-	Obstaculo *o = new Obstaculo(randomX,CENTRO,randomLargura,ALTURA);
-	vParedes.push_back(*o);
-	glutTimerFunc(10000,criaObstaculo,0);
+	if(!pause && inGame){
+		randomX = rand() % 50  + DIREITA_TELA;
+		randomLargura = 10*(1 + rand() % 3);
+		Obstaculo *o = new Obstaculo(randomX,CENTRO,randomLargura,ALTURA);
+		vParedes.push_back(*o);
+		glutTimerFunc(3000,criaObstaculo,0);
+	}
 }
 
 //ajuste de tela
@@ -78,7 +83,7 @@ void ajustaTela(int NewWidth,int NewHeight){
     glViewport(0, 0, NewWidth, NewHeight);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(RazaoAspecto*ESQUERDA_TELA, RazaoAspecto*DIREITA_TELA, FUNDO_TELA, TOPO_TELA, -3.0, 3.0);
+    glOrtho(RazaoAspecto*ESQUERDA_TELA, RazaoAspecto*DIREITA_TELA, FUNDO_TELA, TOPO_TELA, -1.0, 1.0);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -89,10 +94,28 @@ void teclasJogo(unsigned char tecla,int x,int y){
 	if(tecla == ESC){
 		exit(0);
 	}
-	//TESTEEEEEE
-	if(tecla == 'p'){
-		controleTela->setTela(JOGO);
-		glutTimerFunc(500,criaObstaculo,1);
+	switch(controleTela->getTela()){
+		case MENU:
+			//TESTEEEEEE
+			if(tecla == 'j'){
+				controleTela->setTela(JOGO);
+				inGame = true;
+				glutTimerFunc(500,criaObstaculo,1);
+			}
+			break;
+		case JOGO:
+			if(tecla == 'p' || tecla  == 'P'){
+				pause = true;
+				controleTela->setTela(PAUSE);
+			}
+			break;
+		case PAUSE:
+			if(tecla == 'p' || tecla  == 'P'){
+				pause = false;
+				controleTela->setTela(JOGO);
+				glutTimerFunc(500,criaObstaculo,1);
+			}
+			break;
 	}
 }
 
@@ -117,7 +140,7 @@ void teclasJogoEspOcioso(int tecla, int x, int y){
 			pers->mudaSituacao(normal);
 			break;
 		case GLUT_KEY_DOWN:
-			cout << mapa->getPontuacao() << endl;
+			//cout << mapa->getPontuacao() << endl;
 			pers->mudaSituacao(normal);
 			break;
 		default:
@@ -129,10 +152,14 @@ void teclasJogoEspOcioso(int tecla, int x, int y){
 
 void update(int k){
 	tempo++;
-	if (pers->verificaColisao(vParedes)) // temporário
-	controleTela->setTela(MENU);
-
-		// pers->mudaSentido(parado);
+	cout<<vParedes.size()<<endl;
+	//temporário
+	if(pers->verificaColisao(vParedes)){
+		inGame = false;
+		mapa->zeraPontuacao();
+		vParedes.clear();
+		controleTela->setTela(MENU);
+	}
 	vParedes = mapa->move(vParedes);
 	glutPostRedisplay();
 	glutTimerFunc(0, update, 0);
@@ -152,18 +179,14 @@ int main(int argc, char **argv){
 	//tamanho da tela
 	glutInitWindowSize(700,700);
 	glutCreateWindow("PacDecom");
-	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-
+	init();
 	//callbacks
 	glutDisplayFunc(desenhaTela);
 	glutReshapeFunc(ajustaTela);
 	glutKeyboardFunc(teclasJogo);
 	glutSpecialFunc(teclasJogoEsp);
 	glutSpecialUpFunc(teclasJogoEspOcioso);
-	init();
-
-	init();
 	glutTimerFunc(0, update, 0);
 
 	glutMainLoop();

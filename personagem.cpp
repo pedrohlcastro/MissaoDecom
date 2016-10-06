@@ -17,13 +17,30 @@ Movimento::Movimento(){
 	this->alturaPulo = 100;
 	this->situacao = normal;
 }
+Movimento::Movimento(std::string textura){
+	this->pontos.x = -100;
+	this->pontos.y = 0;
+	this->comprimento = 20;
+	this->gravidadePulo = 1.5;
+	this->alturaPulo = 100;
+	this->situacao = normal;
+	this->textura = SOIL_load_OGL_texture(
+	    textura.c_str(),
+		SOIL_LOAD_AUTO,
+    	SOIL_CREATE_NEW_ID,
+    	SOIL_FLAG_INVERT_Y
+	);
+	if (this->textura == 0 ) {
+		printf("Erro carregando textura: '%s'\n", SOIL_last_result());
+	}
+}
 
 void Movimento::incPontoY(float inc){
 	this->pontos.y += inc;
 }
 
 void Movimento::pula(){
-	cout << "x " << this->pontos.x << "y " << this->pontos.y << endl;
+	//cout << "x " << this->pontos.x << "y " << this->pontos.y << endl;
 	if (this->pontos.y > 0 && this->pontos.y <= this->alturaPulo){
 		this->pontos.y += 12 - this->gravidadePulo;
 		this->gravidadePulo += 1;

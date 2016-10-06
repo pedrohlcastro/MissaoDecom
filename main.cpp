@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <SOIL/SOIL.h>
+#include <SFML/Network.hpp>
 #include <bits/stdc++.h>
 #include "estruturasPrincipais.h"
 #include "mapa.h"
@@ -11,6 +12,9 @@ using namespace std;
 int tempo = 0;
 bool pause = false;
 bool inGame = false; //caso esteja jogando
+bool gravado = false;
+
+string nomeJogador;
 //Mapa
 Mapa *mapa = new Mapa();
 
@@ -23,6 +27,12 @@ vector<Obstaculo> vParedes;
 //Telas
 Tela *controleTela;
 
+// Create a new FTP client
+sf::Ftp ftp;
+// Connect to the server
+sf::Ftp::Response response = ftp.connect("rankgamedecom.orgfree.com");
+
+FILE *file;
 void escreveTexto(void * font, string s, float x, float y, float z){
     int i;
     glRasterPos3f(x, y, z);
@@ -31,11 +41,27 @@ void escreveTexto(void * font, string s, float x, float y, float z){
        glutBitmapCharacter(font, s[i]);
 }
 
+void conectServer(){
+	if(response.isOk())
+    	std::cout << "Connected" << std::endl;
+	
+	// Log in
+	response = ftp.login("rankgamedecom.orgfree.com", "123456");
+	if(response.isOk())
+		std::cout << "Logged in" << std::endl;
+	
+	//baixa rank
+	ftp.download("rank.txt", "", sf::Ftp::Ascii);
+
+	ftp.keepAlive();
+}
 
 void init(){
 	std::vector<string> enderecoTexturas;
 	enderecoTexturas.push_back("img/print2.png");
 	controleTela = new Tela(enderecoTexturas);
+	printf("SERVER:\n");
+	conectServer();
 }
 
 //func de desenha na tela
@@ -59,6 +85,37 @@ void desenhaTela(){
 		case JOGO:
 			mapa->desenhaObstaculos(vParedes);
 			pers->desenhaPersonagem();
+			break;
+		case RANK:
+			escreveTexto(GLUT_BITMAP_HELVETICA_18, "Escreva seu Nome para o Rank:", ESQUERDA_TELA, 30, 0);
+			escreveTexto(GLUT_BITMAP_HELVETICA_18, nomeJogador, ESQUERDA_TELA, 0, 0);
+			break;
+		case LISTA_RANK:
+			ofstream myfile ("rank.txt",ofstream::app);
+			if(myfile.is_open() && !gravado){
+				myfile<<endl<<nomeJogador<<endl;
+				myfile<<mapa->getPontuacao();
+				mapa->zeraPontuacao();
+				nomeJogador.clear();
+				myfile.close();
+				gravado = true;
+				ftp.upload("rank.txt", "/", sf::Ftp::Ascii);
+			}
+
+			escreveTexto(GLUT_BITMAP_HELVETICA_18, "RANK:", ESQUERDA_TELA, 200, 0);
+			
+			string line;
+			int conta = 0;
+			ifstream myfile1 ("rank.txt");
+			if (myfile1.is_open()){
+				while ( getline (myfile1,line) || conta == 10){
+					conta++;
+					escreveTexto(GLUT_BITMAP_HELVETICA_18,line , ESQUERDA_TELA, 200 - (conta * 30), 0);
+					line.clear();
+				}	
+				myfile1.close();
+  			}
+			else cout<<"NAO DEU PRA ABRIR RANK"<<endl;
 			break;
 	}
 	glutSwapBuffers();
@@ -116,6 +173,19 @@ void teclasJogo(unsigned char tecla,int x,int y){
 				glutTimerFunc(500,criaObstaculo,1);
 			}
 			break;
+		case RANK:
+			if(tecla == BACKSPACE && nomeJogador.size() > 0)
+				nomeJogador.erase(nomeJogador.size()-1);
+			else if(tecla == ENTER)
+				controleTela->setTela(LISTA_RANK);
+			else
+				nomeJogador+=tecla;
+			printf("%d\n",tecla );
+			break;
+		case LISTA_RANK:
+			if(tecla == 'r' || tecla == 'R')
+				controleTela->setTela(MENU);
+			break;
 	}
 }
 
@@ -156,9 +226,9 @@ void update(int k){
 	//temporário
 	if(pers->verificaColisao(vParedes)){
 		inGame = false;
-		mapa->zeraPontuacao();
+		gravado = false;
 		vParedes.clear();
-		controleTela->setTela(MENU);
+		controleTela->setTela(RANK);
 	}
 	vParedes = mapa->move(vParedes);
 	glutPostRedisplay();

@@ -7,7 +7,7 @@
 #define DIREITA_TELA 350
 #define CENTRO 0
 #define ALTURA 20
-#define PASSO_DO_PERSONAGEM 0.001
+#define PASSO_DO_PERSONAGEM 0.00001
 #define QTD_TELAS 5
 
 enum Sentido {normal, cima, baixo, perdeu};

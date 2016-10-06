@@ -56,17 +56,19 @@ void Movimento::pula(){
 	}
 }
 
-bool Movimento::verificaColisao(vector<Obstaculo> vParedes){
+bool Movimento::verificaColisao(vector<Obstaculo> vParedes){  
 	for (int i = 0; i < vParedes.size(); i++){
 		// colisao por cima
-		if (this->pontos.y + this->comprimento + PASSO_DO_PERSONAGEM > vParedes[i].getCoord().y && this->pontos.y + PASSO_DO_PERSONAGEM < vParedes[i].getCoord().y + vParedes[i].getAltura()){
-			if (!(this->pontos.x + this->comprimento <= vParedes[i].getCoord().x || this->pontos.x >= vParedes[i].getCoord().x + vParedes[i].getLargura()))
+		float xParede = vParedes[i].getCoord().x;
+		float yParede = vParedes[i].getCoord().y;
+		if (this->pontos.y + this->comprimento + PASSO_DO_PERSONAGEM > yParede && this->pontos.y + PASSO_DO_PERSONAGEM < yParede + vParedes[i].getAltura()){
+			if (!(this->pontos.x + this->comprimento <= xParede || this->pontos.x >= xParede + vParedes[i].getLargura()))
 				return true;
 		}
 
 		// colisao pelo lado esquerdo
-		if (this->pontos.x - PASSO_DO_PERSONAGEM > vParedes[i].getCoord().x && this->pontos.x - PASSO_DO_PERSONAGEM < vParedes[i].getCoord().x + vParedes[i].getLargura()){
-			if (!(this->pontos.y + this->comprimento <= vParedes[i].getCoord().y || this->pontos.y >= vParedes[i].getCoord().y + vParedes[i].getAltura()))
+		if (this->pontos.x - PASSO_DO_PERSONAGEM > xParede && this->pontos.x - PASSO_DO_PERSONAGEM < xParede + vParedes[i].getLargura()){
+			if (!(this->pontos.y + this->comprimento <= yParede || this->pontos.y >= yParede + vParedes[i].getAltura()))
 				return true;
 		}
 	}
@@ -91,7 +93,6 @@ void Movimento::desenhaPersonagem(){
 
 	glPushMatrix();
 		glTranslatef(this->pontos.x, this->pontos.y, 1);
-		//printf("%f %f\n",this->pontoParede.x, this->pontoParede.y );
 		glBegin(GL_POLYGON);
 			glVertex2f(0,0);
 			glVertex2f(this->comprimento,0);

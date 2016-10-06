@@ -12,8 +12,6 @@ using namespace std;
 int tempo = 0;
 bool pause = false;
 bool inGame = false; //caso esteja jogando
-bool gravado = false;//gravado arquivo rank
-string aviso = "Digite seu Nome para RANK:";
 
 string nomeJogador;
 //Mapa
@@ -34,6 +32,8 @@ sf::Ftp ftp;
 // Connect to the server
 sf::Ftp::Response response = ftp.connect("rankgamedecom.orgfree.com");
 vector<jogador> rankJogadores;
+bool gravado = false;//gravado arquivo rank
+
 void escreveTexto(void * font, string s, float x, float y, float z){
     int i;
     glRasterPos3f(x, y, z);
@@ -45,12 +45,10 @@ void escreveTexto(void * font, string s, float x, float y, float z){
 void conectServer(){
 	if(response.isOk())
     	std::cout << "Connected" << std::endl;
-	
 	// Log in
 	response = ftp.login("rankgamedecom.orgfree.com", "123456");
 	if(response.isOk())
 		std::cout << "Logged in" << std::endl;
-
 	ftp.keepAlive();
 }
 
@@ -74,6 +72,7 @@ void montaRank(){
 	bool arqVazio = true;
 	//baixa rank
 	ftp.download("rank.txt", "", sf::Ftp::Ascii);
+	cout<<"Download Completed"<<endl;
 	ifstream file1 ("rank.txt");
 	if (file1.is_open()){
 		while(getline (file1,line) && getline (file1,line2)){
@@ -96,6 +95,7 @@ void montaRank(){
 		rankJogadores.push_back(jogadores[i]);
 	}
 	ofstream myfile ("rank.txt",ofstream::out);
+	cout<<"Upload Complete"<<endl;
 	if(myfile.is_open() && !gravado){
 		for(int i=0; i<rankJogadores.size(); i++){
 			myfile<<rankJogadores[i].nome<<endl<<rankJogadores[i].pontos<<endl;	
@@ -146,7 +146,7 @@ void desenhaTela(){
 					conta++;
 					escreveTexto(GLUT_BITMAP_HELVETICA_18,line , ESQUERDA_TELA + desloca, 200 - (conta * 30), 0);
 					line.clear();
-					if(desloca ==35)
+					if(desloca == 35)
 						desloca = 45;
 					else
 						desloca = 35;
@@ -174,7 +174,6 @@ void criaObstaculo(int k){
 //ajuste de tela
 void ajustaTela(int NewWidth,int NewHeight){
 	float RazaoAspecto = (float)NewWidth/NewHeight;
-
     glViewport(0, 0, NewWidth, NewHeight);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -215,7 +214,6 @@ void teclasJogo(unsigned char tecla,int x,int y){
 			if(tecla == BACKSPACE && nomeJogador.size() > 0)
 				nomeJogador.erase(nomeJogador.size()-1);
 			else if(tecla == ENTER){
-				aviso = "AGUARDE, ENVIANDO...!!";
 				montaRank();
 				controleTela->setTela(LISTA_RANK);
 			}
@@ -242,8 +240,6 @@ void teclasJogoEsp(int tecla, int x, int y){
 		default:
 			break;
 	}
-
-	//cout << pers->getSituacao() << endl;
 }
 
 void teclasJogoEspOcioso(int tecla, int x, int y){
@@ -252,19 +248,15 @@ void teclasJogoEspOcioso(int tecla, int x, int y){
 			pers->mudaSituacao(normal);
 			break;
 		case GLUT_KEY_DOWN:
-			//cout << mapa->getPontuacao() << endl;
 			pers->mudaSituacao(normal);
 			break;
 		default:
 			break;
 	}
-
-	//cout << pers->getSituacao() << endl;
 }
 
 void update(int k){
 	tempo++;
-	//cout<<vParedes.size()<<endl;
 	//temporário
 	if(pers->verificaColisao(vParedes)){
 		inGame = false;
@@ -278,7 +270,6 @@ void update(int k){
 }
 
 
-
 int main(int argc, char **argv){
 	//INIT
 	srand(time(0));
@@ -290,7 +281,7 @@ int main(int argc, char **argv){
 
 	//tamanho da tela
 	glutInitWindowSize(700,700);
-	glutCreateWindow("PacDecom");
+	glutCreateWindow("MissaoDecom");
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	init();
 	//callbacks

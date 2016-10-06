@@ -1,3 +1,5 @@
+nao sei se e o PC
+300
 cem
 160
 quarenta
@@ -9,6 +11,4 @@ zero
 dnv
 0
 ui deucerto
-0
-pedro zero
 0

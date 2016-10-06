@@ -14,7 +14,6 @@ class Mapa{
 	private:
 		int pontuacao;
 	public:
-		//Mapa(std::string textura);
 		Mapa();
 		int getPontuacao();
 		void desenhaObstaculos(std::vector<Obstaculo>vParedes);

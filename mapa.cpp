@@ -60,7 +60,6 @@ int Mapa::getPontuacao(){
 
 void Mapa::desenhaObstaculos(std::vector<Obstaculo> vParedes){
 	for(int i=0; i < vParedes.size(); i++){
-		// printf("i=%d x=%f y=%f\n",i,vParedes[i].pontoObstaculo.x,vParedes[i].pontoObstaculo.y );
 		vParedes[i].desenhaObstaculo();
 	}
 }

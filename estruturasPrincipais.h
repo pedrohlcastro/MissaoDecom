@@ -17,3 +17,8 @@ enum Telas {MENU=0, JOGO, PAUSE, GAME_OVER, WIN,RANK,LISTA_RANK};
 typedef struct Coordenadas{
 	float x,y; //2D
 }ponto;
+
+typedef struct Jogador{
+	std::string nome;
+	int pontos;
+}jogador;

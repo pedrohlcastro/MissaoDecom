@@ -12,7 +12,8 @@ using namespace std;
 int tempo = 0;
 bool pause = false;
 bool inGame = false; //caso esteja jogando
-bool gravado = false;
+bool gravado = false;//gravado arquivo rank
+string aviso = "Digite seu Nome para RANK:";
 
 string nomeJogador;
 //Mapa
@@ -27,12 +28,12 @@ vector<Obstaculo> vParedes;
 //Telas
 Tela *controleTela;
 
+//(((((((RANK)))))))
 // Create a new FTP client
 sf::Ftp ftp;
 // Connect to the server
 sf::Ftp::Response response = ftp.connect("rankgamedecom.orgfree.com");
-
-FILE *file;
+vector<jogador> rankJogadores;
 void escreveTexto(void * font, string s, float x, float y, float z){
     int i;
     glRasterPos3f(x, y, z);
@@ -49,9 +50,6 @@ void conectServer(){
 	response = ftp.login("rankgamedecom.orgfree.com", "123456");
 	if(response.isOk())
 		std::cout << "Logged in" << std::endl;
-	
-	//baixa rank
-	ftp.download("rank.txt", "", sf::Ftp::Ascii);
 
 	ftp.keepAlive();
 }
@@ -62,6 +60,52 @@ void init(){
 	controleTela = new Tela(enderecoTexturas);
 	printf("SERVER:\n");
 	conectServer();
+}
+
+bool sortJogadores(jogador a, jogador b){
+	return (a.pontos > b.pontos);
+}
+
+void montaRank(){
+	string line,line2;
+	jogador aux;
+	vector<jogador> jogadores;
+	int number = 0;
+	bool arqVazio = true;
+	//baixa rank
+	ftp.download("rank.txt", "", sf::Ftp::Ascii);
+	ifstream file1 ("rank.txt");
+	if (file1.is_open()){
+		while(getline (file1,line) && getline (file1,line2)){
+			number = 0;
+			arqVazio = false;
+			aux.nome = line;
+			for(int i=0; i<line2.size()-1; i++){
+				number += (line2[i] - 48) * pow(10,line2.size() - i - 2);
+			}
+			aux.pontos = number;
+			jogadores.push_back(aux);
+		}
+		aux.nome = nomeJogador;
+		aux.pontos = mapa->getPontuacao();
+		jogadores.push_back(aux);
+		sort(jogadores.begin(),jogadores.end(),sortJogadores);
+		file1.close();
+	}
+	for(int i=0; i<jogadores.size() && i<7; i++){
+		rankJogadores.push_back(jogadores[i]);
+	}
+	ofstream myfile ("rank.txt",ofstream::out);
+	if(myfile.is_open() && !gravado){
+		for(int i=0; i<rankJogadores.size(); i++){
+			myfile<<rankJogadores[i].nome<<endl<<rankJogadores[i].pontos<<endl;	
+		}
+		myfile.close();
+		gravado = true;
+		nomeJogador.clear();
+		mapa->zeraPontuacao();
+		ftp.upload("rank.txt", "/", sf::Ftp::Ascii);
+	}			
 }
 
 //func de desenha na tela
@@ -87,31 +131,25 @@ void desenhaTela(){
 			pers->desenhaPersonagem();
 			break;
 		case RANK:
-			escreveTexto(GLUT_BITMAP_HELVETICA_18, "Escreva seu Nome para o Rank:", ESQUERDA_TELA, 30, 0);
-			escreveTexto(GLUT_BITMAP_HELVETICA_18, nomeJogador, ESQUERDA_TELA, 0, 0);
+			escreveTexto(GLUT_BITMAP_HELVETICA_18, "Digite Seu Nome para RANK:", ESQUERDA_TELA + 20, 30, 0);
+			escreveTexto(GLUT_BITMAP_HELVETICA_18, nomeJogador, ESQUERDA_TELA + 35, 0, 0);
+			escreveTexto(GLUT_BITMAP_HELVETICA_18, "Aperte ENTER e Aguarde...!!!", CENTRO, FUNDO_TELA + 20, 0);
 			break;
 		case LISTA_RANK:
-			ofstream myfile ("rank.txt",ofstream::app);
-			if(myfile.is_open() && !gravado){
-				myfile<<endl<<nomeJogador<<endl;
-				myfile<<mapa->getPontuacao();
-				mapa->zeraPontuacao();
-				nomeJogador.clear();
-				myfile.close();
-				gravado = true;
-				ftp.upload("rank.txt", "/", sf::Ftp::Ascii);
-			}
-
-			escreveTexto(GLUT_BITMAP_HELVETICA_18, "RANK:", ESQUERDA_TELA, 200, 0);
-			
+			escreveTexto(GLUT_BITMAP_HELVETICA_18, "RANK:", ESQUERDA_TELA + 20, 200, 0);			
 			string line;
 			int conta = 0;
+			int desloca = 35;
 			ifstream myfile1 ("rank.txt");
 			if (myfile1.is_open()){
-				while ( getline (myfile1,line) || conta == 10){
+				while ( getline (myfile1,line) || conta == 6){
 					conta++;
-					escreveTexto(GLUT_BITMAP_HELVETICA_18,line , ESQUERDA_TELA, 200 - (conta * 30), 0);
+					escreveTexto(GLUT_BITMAP_HELVETICA_18,line , ESQUERDA_TELA + desloca, 200 - (conta * 30), 0);
 					line.clear();
+					if(desloca ==35)
+						desloca = 45;
+					else
+						desloca = 35;
 				}	
 				myfile1.close();
   			}
@@ -176,15 +214,19 @@ void teclasJogo(unsigned char tecla,int x,int y){
 		case RANK:
 			if(tecla == BACKSPACE && nomeJogador.size() > 0)
 				nomeJogador.erase(nomeJogador.size()-1);
-			else if(tecla == ENTER)
+			else if(tecla == ENTER){
+				aviso = "AGUARDE, ENVIANDO...!!";
+				montaRank();
 				controleTela->setTela(LISTA_RANK);
+			}
 			else
 				nomeJogador+=tecla;
-			printf("%d\n",tecla );
 			break;
 		case LISTA_RANK:
-			if(tecla == 'r' || tecla == 'R')
+			if(tecla == 'r' || tecla == 'R'){
+				rankJogadores.clear();
 				controleTela->setTela(MENU);
+			}
 			break;
 	}
 }

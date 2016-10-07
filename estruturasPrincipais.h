@@ -5,6 +5,8 @@
 #define FUNDO_TELA -350
 #define ESQUERDA_TELA -350
 #define DIREITA_TELA 350
+#define TELA_LARGURA 700
+#define TELA_ALTURA 350
 #define CENTRO 0
 #define ALTURA 20
 #define PASSO_DO_PERSONAGEM 0.3

@@ -11,12 +11,11 @@
 using namespace std;
 
 int tempo = 0;
-//bool pause = false; == controleTela->getTela() == PAUSE
-//bool inGame = false; //caso esteja jogando ===  controleTela->getTela() == JOGO
 sf::Music musicaJogo;
+sf::Music musicaBatida;
 string nomeJogador;
 //Mapa
-Mapa *mapa = new Mapa();
+Mapa *mapa;
 
 // personagem
 Movimento *pers;
@@ -41,7 +40,9 @@ void update(int k){
 	if(pers->verificaColisao(vParedes)){
 		gravado = false;
 		vParedes.clear();
+		musicaBatida.play();
 		controleTela->setTela(GAME_OVER);
+		mapa->zeraPontuacao();
 		// controleTela->setTela(RANK); // retirei rank por enquanto
 	}
 	if (controleTela->getTela() == JOGO)
@@ -79,10 +80,13 @@ void init(){
 
 	controleTela = new Tela(enderecoTexturas);
 	pers = new Movimento("img/pers.png");
+	mapa = new Mapa();
 	printf("SERVER:\n");
 	conectServer();
 
 	musicaJogo.openFromFile("sound/game.ogg");
+	musicaJogo.setLoop(true);
+	musicaBatida.openFromFile("sound/bat.ogg");
 	musicaJogo.play();
 }
 
@@ -129,7 +133,6 @@ void montaRank(){
 		myfile.close();
 		gravado = true;
 		nomeJogador.clear();
-		mapa->zeraPontuacao();
 		ftp.upload("rank.txt", "/", sf::Ftp::Ascii);
 	}
 }
@@ -205,7 +208,7 @@ void criaObstaculo(int k){
 	if(controleTela->getTela() == JOGO){ // mudei disso !pause && inGame pra isso <<
 		randomX = rand() % 50  + DIREITA_TELA;
 		randomLargura = 10*(1 + rand() % 3);
-		Obstaculo *o = new Obstaculo(randomX,CENTRO,randomLargura,ALTURA);
+		Obstaculo *o = new Obstaculo(randomX,CENTRO,randomLargura,ALTURA,mapa->getImagens()[rand() % TIPO_OBJ]);
 		vParedes.push_back(*o);
 		glutTimerFunc(3000,criaObstaculo,0);
 	}
@@ -230,7 +233,6 @@ void teclasJogo(unsigned char tecla,int x,int y){
 			//TESTEEEEEE
 			if(tecla == ESC)
 				exit(0);
-
 			if(tecla == 'j'){
 				controleTela->setTela(JOGO);
 				glutTimerFunc(500,criaObstaculo,1);
@@ -239,7 +241,7 @@ void teclasJogo(unsigned char tecla,int x,int y){
 		case GAME_OVER:
 			if (tecla == 13)
 			controleTela->setTela(MENU);
-			init(); // reinicia (nao sei se ta certo, nao vi)
+			//init(); // reinicia (nao sei se ta certo, nao vi)
 			break;
 		case CREDITOS:
 			if(tecla == ESC)

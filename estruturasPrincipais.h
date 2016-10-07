@@ -12,7 +12,7 @@
 #define DESIRED_FPS 60
 
 enum Sentido {normal, cima, baixo, perdeu};
-enum Telas {MENU=0, JOGO, PAUSE, GAME_OVER, WIN,RANK,LISTA_RANK};
+enum Telas {MENU=0, CREDITOS, PAUSE, GAME_OVER, JOGO, CARREGANDO, CONF, WIN,RANK,LISTA_RANK};
 
 //estrutura de ponto ou cordenada
 typedef struct Coordenadas{

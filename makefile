@@ -1,5 +1,5 @@
 CC = g++
-OPCOES_COMPILADOR= -lSOIL -lGL -lglut -lGLEW -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network 
+OPCOES_COMPILADOR= -lSOIL -lGL -lglut -lGLEW -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network -lsfml-audio 
 TODOS_ARQUIVOS_PONTOH = estruturasPrincipais.h mapa.h personagem.h tela.h
 TODOS_ARQUIVOS_OBJ = main.o mapa.o personagem.o tela.o
 

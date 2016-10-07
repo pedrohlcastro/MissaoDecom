@@ -2,6 +2,7 @@
 #include <GL/freeglut.h>
 #include <SOIL/SOIL.h>
 #include <SFML/Network.hpp>
+#include <SFML/Audio.hpp>
 #include <bits/stdc++.h>
 #include "estruturasPrincipais.h"
 #include "mapa.h"
@@ -10,9 +11,9 @@
 using namespace std;
 
 int tempo = 0;
-bool pause = false;
-bool inGame = false; //caso esteja jogando
-
+//bool pause = false; == controleTela->getTela() == PAUSE
+//bool inGame = false; //caso esteja jogando ===  controleTela->getTela() == JOGO
+sf::Music musicaJogo;
 string nomeJogador;
 //Mapa
 Mapa *mapa = new Mapa();
@@ -32,18 +33,20 @@ sf::Ftp ftp;
 // Connect to the server
 sf::Ftp::Response response = ftp.connect("rankgamedecom.orgfree.com");
 vector<jogador> rankJogadores;
-bool gravado = false;//gravado arquivo rank
+bool gravado = false; //gravado arquivo rank
 
 void update(int k){
 	tempo++;
 	//temporário
 	if(pers->verificaColisao(vParedes)){
-		inGame = false;
 		gravado = false;
 		vParedes.clear();
-		controleTela->setTela(RANK);
+		controleTela->setTela(GAME_OVER);
+		// controleTela->setTela(RANK); // retirei rank por enquanto
 	}
-	vParedes = mapa->move(vParedes);
+	if (controleTela->getTela() == JOGO)
+		vParedes = mapa->move(vParedes);
+
 	glutPostRedisplay();
 	glutTimerFunc(1000/DESIRED_FPS, update, 0);
 }
@@ -68,11 +71,19 @@ void conectServer(){
 
 void init(){
 	std::vector<string> enderecoTexturas;
-	enderecoTexturas.push_back("img/print2.png");
+	enderecoTexturas.push_back("img/fundo_menu.png");
+	enderecoTexturas.push_back("img/fundo_creditos.png");
+	enderecoTexturas.push_back("img/fundopause.png");
+	enderecoTexturas.push_back("img/fundo_perdeu.png");
+	enderecoTexturas.push_back("img/fundo_cenario.jpg");
+
 	controleTela = new Tela(enderecoTexturas);
 	pers = new Movimento("img/pers.png");
 	printf("SERVER:\n");
 	conectServer();
+
+	musicaJogo.openFromFile("sound/game.ogg");
+	musicaJogo.play();
 }
 
 bool sortJogadores(jogador a, jogador b){
@@ -139,9 +150,21 @@ void desenhaTela(){
 
 	switch(controleTela->getTela()){
 		case MENU:
+			controleTela->desenhaTelaSprite(controleTela->getPosicaoTexturaMenu(),controleTela->getPosicaoTexturaMenu()+0.25);
+			break;
+		case PAUSE:
+			controleTela->desenhaTela();
+			break;
+		case GAME_OVER:
+			controleTela->desenhaTela();
+			break;
+		case CONF:
+			break;
+		case CREDITOS:
 			controleTela->desenhaTela();
 			break;
 		case JOGO:
+			controleTela->desenhaTela(345, 500);
 			mapa->desenhaObstaculos(vParedes);
 			pers->desenhaPersonagem();
 			break;
@@ -170,6 +193,8 @@ void desenhaTela(){
   			}
 			else cout<<"NAO DEU PRA ABRIR RANK"<<endl;
 			break;
+
+
 	}
 	glutSwapBuffers();
 }
@@ -177,7 +202,7 @@ void desenhaTela(){
 //funcao que cria obstaculos de tempo em tempo
 void criaObstaculo(int k){
 	int randomX,randomLargura;
-	if(!pause && inGame){
+	if(controleTela->getTela() == JOGO){ // mudei disso !pause && inGame pra isso <<
 		randomX = rand() % 50  + DIREITA_TELA;
 		randomLargura = 10*(1 + rand() % 3);
 		Obstaculo *o = new Obstaculo(randomX,CENTRO,randomLargura,ALTURA);
@@ -200,32 +225,42 @@ void ajustaTela(int NewWidth,int NewHeight){
 
 //teclas de suporte no jogo
 void teclasJogo(unsigned char tecla,int x,int y){
-	if(tecla == ESC){
-		exit(0);
-	}
 	switch(controleTela->getTela()){
 		case MENU:
 			//TESTEEEEEE
+			if(tecla == ESC)
+				exit(0);
+
 			if(tecla == 'j'){
 				controleTela->setTela(JOGO);
-				inGame = true;
 				glutTimerFunc(500,criaObstaculo,1);
 			}
 			break;
+		case GAME_OVER:
+			if (tecla == 13)
+			controleTela->setTela(MENU);
+			init(); // reinicia (nao sei se ta certo, nao vi)
+			break;
+		case CREDITOS:
+			if(tecla == ESC)
+				controleTela->setTela(MENU);
+			break;
 		case JOGO:
-			if(tecla == 'p' || tecla  == 'P'){
-				pause = true;
+			if(tecla == ESC)
+				exit(0);
+			if(tecla == 'p' || tecla  == 'P')
 				controleTela->setTela(PAUSE);
-			}
+
 			break;
 		case PAUSE:
 			if(tecla == 'p' || tecla  == 'P'){
-				pause = false;
 				controleTela->setTela(JOGO);
 				glutTimerFunc(500,criaObstaculo,1);
 			}
 			break;
 		case RANK:
+			if(tecla == ESC)
+				exit(0);
 			if(tecla == BACKSPACE && nomeJogador.size() > 0)
 				nomeJogador.erase(nomeJogador.size()-1);
 			else if(tecla == ENTER){
@@ -236,11 +271,19 @@ void teclasJogo(unsigned char tecla,int x,int y){
 				nomeJogador+=tecla;
 			break;
 		case LISTA_RANK:
+			if(tecla == ESC)
+				exit(0);
+
 			if(tecla == 'r' || tecla == 'R'){
 				rankJogadores.clear();
 				controleTela->setTela(MENU);
 			}
 			break;
+		 default:
+			if(tecla == ESC)
+				exit(0);
+			break;
+
 	}
 }
 
@@ -270,7 +313,46 @@ void teclasJogoEspOcioso(int tecla, int x, int y){
 	}
 }
 
+void mouseControlCliqueMenu (int button, int state, int x, int y){
+    // Botões clicáveis no menu =o
+    if (controleTela->getTela() == MENU && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
+        if (controleTela->getPosicaoTexturaMenu() == 0.0){
+            controleTela->setTela(JOGO);
+			glutTimerFunc(500,criaObstaculo,1);
 
+		}
+        else if (controleTela->getPosicaoTexturaMenu() == 0.25)
+			controleTela->setTela(CONF);
+        else if (controleTela->getPosicaoTexturaMenu() == 0.50)
+			controleTela->setTela(CREDITOS);
+        else if (controleTela->getPosicaoTexturaMenu() == 0.75)
+            exit(0);
+    }
+}
+
+
+void mouseControl (int x, int y){
+    // Recebe tamanho de tela
+    float tamW = (float) glutGet(GLUT_WINDOW_WIDTH);
+    float tamH = (float) glutGet(GLUT_WINDOW_HEIGHT);
+    int mouseX = x;
+    int mouseY = y;
+
+    // Calcula valor percentual na tela na posição do mouse
+    float mousePorcentagemX = 100 * mouseX / tamW;
+    float mousePorcentagemY = 100 * mouseY / tamH;
+
+	// Menu com mouse (valores atribuidos de acordo com limites dos botões)
+	  if (mousePorcentagemX > 45 && mousePorcentagemX < 65 && mousePorcentagemY > 45 && mousePorcentagemY < 53)
+	  	controleTela->setPosicaoTexturaMenu(0.0);
+	  if (mousePorcentagemX > 45 && mousePorcentagemX < 65 && mousePorcentagemY > 59 && mousePorcentagemY < 67)
+	      controleTela->setPosicaoTexturaMenu(0.25);
+	  if (mousePorcentagemX > 45 && mousePorcentagemX < 65 && mousePorcentagemY > 74 && mousePorcentagemY < 81)
+	      controleTela->setPosicaoTexturaMenu(0.50);
+	  if (mousePorcentagemX > 45 && mousePorcentagemX < 65 && mousePorcentagemY > 86 && mousePorcentagemY < 93)
+	      controleTela->setPosicaoTexturaMenu(0.75);
+
+}
 
 int main(int argc, char **argv){
 	//INIT
@@ -292,7 +374,13 @@ int main(int argc, char **argv){
 	glutKeyboardFunc(teclasJogo);
 	glutSpecialFunc(teclasJogoEsp);
 	glutSpecialUpFunc(teclasJogoEspOcioso);
+
+	glutMouseFunc(mouseControlCliqueMenu);
+	glutPassiveMotionFunc(mouseControl);
+
 	glutTimerFunc(1000/DESIRED_FPS, update, 0);
+	glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR); // Muda desenhinho do mouse
 	glutMainLoop();
+
 	return 0;
 }

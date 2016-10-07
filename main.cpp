@@ -18,7 +18,7 @@ string nomeJogador;
 Mapa *mapa = new Mapa();
 
 // personagem
-Movimento *pers = new Movimento();
+Movimento *pers;
 
 //Obstaculos
 vector<Obstaculo> vParedes;
@@ -70,6 +70,7 @@ void init(){
 	std::vector<string> enderecoTexturas;
 	enderecoTexturas.push_back("img/print2.png");
 	controleTela = new Tela(enderecoTexturas);
+	pers = new Movimento("img/pers.png");
 	printf("SERVER:\n");
 	conectServer();
 }
@@ -112,14 +113,14 @@ void montaRank(){
 	cout<<"Upload Complete"<<endl;
 	if(myfile.is_open() && !gravado){
 		for(int i=0; i<rankJogadores.size(); i++){
-			myfile<<rankJogadores[i].nome<<endl<<rankJogadores[i].pontos<<endl;	
+			myfile<<rankJogadores[i].nome<<endl<<rankJogadores[i].pontos<<endl;
 		}
 		myfile.close();
 		gravado = true;
 		nomeJogador.clear();
 		mapa->zeraPontuacao();
 		ftp.upload("rank.txt", "/", sf::Ftp::Ascii);
-	}			
+	}
 }
 
 //func de desenha na tela
@@ -150,7 +151,7 @@ void desenhaTela(){
 			escreveTexto(GLUT_BITMAP_HELVETICA_18, "Aperte ENTER e Aguarde...!!!", CENTRO, FUNDO_TELA + 20, 0);
 			break;
 		case LISTA_RANK:
-			escreveTexto(GLUT_BITMAP_HELVETICA_18, "RANK:", ESQUERDA_TELA + 20, 200, 0);			
+			escreveTexto(GLUT_BITMAP_HELVETICA_18, "RANK:", ESQUERDA_TELA + 20, 200, 0);
 			string line;
 			int conta = 0;
 			int desloca = 35;
@@ -164,7 +165,7 @@ void desenhaTela(){
 						desloca = 45;
 					else
 						desloca = 35;
-				}	
+				}
 				myfile1.close();
   			}
 			else cout<<"NAO DEU PRA ABRIR RANK"<<endl;

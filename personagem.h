@@ -6,6 +6,9 @@ class Movimento{
 		int gravidadePulo;
 		int alturaPulo;
 		int textura;
+
+		float grauVariacao;
+		float variacaoSprite;
 	public:
         Movimento();
         Movimento(std::string textura);

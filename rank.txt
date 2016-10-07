@@ -2,6 +2,8 @@ nao sei se e o PC
 300
 cem
 160
+Tulio
+80
 quarenta
 40
 aguarde
@@ -9,6 +11,4 @@ aguarde
 zero
 0
 dnv
-0
-ui deucerto
 0

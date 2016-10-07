@@ -7,8 +7,9 @@
 #define DIREITA_TELA 350
 #define CENTRO 0
 #define ALTURA 20
-#define PASSO_DO_PERSONAGEM 0.00001
+#define PASSO_DO_PERSONAGEM 0.3
 #define QTD_TELAS 5
+#define DESIRED_FPS 60
 
 enum Sentido {normal, cima, baixo, perdeu};
 enum Telas {MENU=0, JOGO, PAUSE, GAME_OVER, WIN,RANK,LISTA_RANK};

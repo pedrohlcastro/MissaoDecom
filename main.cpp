@@ -34,6 +34,20 @@ sf::Ftp::Response response = ftp.connect("rankgamedecom.orgfree.com");
 vector<jogador> rankJogadores;
 bool gravado = false;//gravado arquivo rank
 
+void update(int k){
+	tempo++;
+	//temporário
+	if(pers->verificaColisao(vParedes)){
+		inGame = false;
+		gravado = false;
+		vParedes.clear();
+		controleTela->setTela(RANK);
+	}
+	vParedes = mapa->move(vParedes);
+	glutPostRedisplay();
+	glutTimerFunc(1000/DESIRED_FPS, update, 0);
+}
+
 void escreveTexto(void * font, string s, float x, float y, float z){
     int i;
     glRasterPos3f(x, y, z);
@@ -255,19 +269,6 @@ void teclasJogoEspOcioso(int tecla, int x, int y){
 	}
 }
 
-void update(int k){
-	tempo++;
-	//temporário
-	if(pers->verificaColisao(vParedes)){
-		inGame = false;
-		gravado = false;
-		vParedes.clear();
-		controleTela->setTela(RANK);
-	}
-	vParedes = mapa->move(vParedes);
-	glutPostRedisplay();
-	glutTimerFunc(0, update, 0);
-}
 
 
 int main(int argc, char **argv){
@@ -290,8 +291,7 @@ int main(int argc, char **argv){
 	glutKeyboardFunc(teclasJogo);
 	glutSpecialFunc(teclasJogoEsp);
 	glutSpecialUpFunc(teclasJogoEspOcioso);
-	glutTimerFunc(0, update, 0);
-
+	glutTimerFunc(1000/DESIRED_FPS, update, 0);
 	glutMainLoop();
 	return 0;
 }

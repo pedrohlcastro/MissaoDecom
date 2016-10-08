@@ -58,8 +58,20 @@ std::vector<Obstaculo> Mapa::move (std::vector<Obstaculo> vParedes){
 	return vParedes;
 }
 
+int Mapa::getTempoCriacao(){
+	return this->tempoCriacao;
+}
+
+void Mapa::aumentaTempoCriacao(int aumento,bool reset){
+	if(reset)
+		this->tempoCriacao = 3000;
+	else
+		this->tempoCriacao -= aumento;
+}
+
 Mapa::Mapa(){
 	this->pontuacao = 0;
+	this->tempoCriacao = 3000;
 	this->vetorImagens[0] =  SOIL_load_OGL_texture(
 	    "img/python.png",
 		SOIL_LOAD_AUTO,

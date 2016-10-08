@@ -25,6 +25,8 @@ vector<Obstaculo> vParedes;
 
 //Telas
 Tela *controleTela;
+double spriteCenarioBegin = 0.00;
+double spriteCenarioEnd = 0.013888889;
 
 //(((((((RANK)))))))
 // Create a new FTP client
@@ -35,7 +37,6 @@ vector<jogador> rankJogadores;
 bool gravado = false; //gravado arquivo rank
 
 void update(int k){
-	tempo++;
 	//temporário
 	if(pers->verificaColisao(vParedes)){
 		gravado = false;
@@ -45,9 +46,13 @@ void update(int k){
 		mapa->zeraPontuacao();
 		// controleTela->setTela(RANK); // retirei rank por enquanto
 	}
-	if (controleTela->getTela() == JOGO)
+	if (controleTela->getTela() == JOGO){
 		vParedes = mapa->move(vParedes);
-
+		if(tempo == AUMENTO_VELOCIDADE){
+			tempo = 0;
+			mapa->aumentaTempoCriacao(300,false);
+		}
+	}
 	glutPostRedisplay();
 	glutTimerFunc(1000/DESIRED_FPS, update, 0);
 }
@@ -55,7 +60,6 @@ void update(int k){
 void escreveTexto(void * font, string s, float x, float y, float z){
     int i;
     glRasterPos3f(x, y, z);
-
     for (i=0; i < s.size(); i++)
        glutBitmapCharacter(font, s[i]);
 }
@@ -167,7 +171,7 @@ void desenhaTela(){
 			controleTela->desenhaTela();
 			break;
 		case JOGO:
-		controleTela->desenhaTela(CENTRO+232, 400);
+			controleTela->desenhaTela(CENTRO+232, 400);
 			mapa->desenhaObstaculos(vParedes);
 			pers->desenhaPersonagem();
 			break;
@@ -207,10 +211,16 @@ void criaObstaculo(int k){
 	int randomX,randomLargura;
 	if(controleTela->getTela() == JOGO){ // mudei disso !pause && inGame pra isso <<
 		randomX = rand() % 50  + DIREITA_TELA;
-		randomLargura = 10*(1 + rand() % 3);
+		randomLargura = 10*(2 + rand() % 2);
 		Obstaculo *o = new Obstaculo(randomX,CENTRO,randomLargura,ALTURA,mapa->getImagens()[rand() % TIPO_OBJ]);
 		vParedes.push_back(*o);
-		glutTimerFunc(3000,criaObstaculo,0);
+		glutTimerFunc(mapa->getTempoCriacao(),criaObstaculo,0);
+		spriteCenarioBegin += 0.013888889;
+		spriteCenarioEnd += 0.013888889;
+		if(spriteCenarioEnd >= 1){
+			spriteCenarioBegin = 0.00;
+			spriteCenarioEnd = 0.013888889;
+		}
 	}
 }
 
@@ -234,7 +244,11 @@ void teclasJogo(unsigned char tecla,int x,int y){
 			if(tecla == ESC)
 				exit(0);
 			if(tecla == 'j'){
+				tempo = 0;
+				spriteCenarioBegin = 0.00;
+				spriteCenarioEnd = 0.013888889;
 				controleTela->setTela(JOGO);
+				mapa->aumentaTempoCriacao(0,true);
 				glutTimerFunc(500,criaObstaculo,1);
 			}
 			break;
@@ -319,6 +333,10 @@ void mouseControlCliqueMenu (int button, int state, int x, int y){
     // Botões clicáveis no menu =o
     if (controleTela->getTela() == MENU && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
         if (controleTela->getPosicaoTexturaMenu() == 0.0){
+            tempo = 0;
+            spriteCenarioBegin = 0.00;
+			spriteCenarioEnd = 0.013888889;
+            mapa->aumentaTempoCriacao(0,true);
             controleTela->setTela(JOGO);
 			glutTimerFunc(500,criaObstaculo,1);
 
@@ -355,7 +373,10 @@ void mouseControl (int x, int y){
 	      controleTela->setPosicaoTexturaMenu(0.75);
 
 }
-
+void timer(int k){
+	tempo++;
+	glutTimerFunc(1000,timer,5);
+}
 int main(int argc, char **argv){
 	//INIT
 	srand(time(0));
@@ -381,6 +402,7 @@ int main(int argc, char **argv){
 	glutPassiveMotionFunc(mouseControl);
 
 	glutTimerFunc(1000/DESIRED_FPS, update, 0);
+	glutTimerFunc(1000,timer,5);
 	glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR); // Muda desenhinho do mouse
 	glutMainLoop();
 

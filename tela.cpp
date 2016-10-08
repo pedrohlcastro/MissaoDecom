@@ -54,7 +54,6 @@ void Tela::desenhaTela(float limInferiorY, float limSuperiorY){
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
-
 }
 
 

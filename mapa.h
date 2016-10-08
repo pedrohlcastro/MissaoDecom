@@ -16,6 +16,7 @@ class Mapa{
 	private:
 		int pontuacao;
 		int vetorImagens[5];
+		int tempoCriacao;
 	public:
 		Mapa();
 		int getPontuacao();
@@ -23,4 +24,6 @@ class Mapa{
 		void zeraPontuacao();
 		std::vector<Obstaculo> move (std::vector<Obstaculo> vParedes);
 		int * getImagens();
+		void aumentaTempoCriacao(int aumento,bool reset);
+		int getTempoCriacao();
 };

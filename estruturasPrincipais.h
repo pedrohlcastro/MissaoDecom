@@ -12,6 +12,7 @@
 #define PASSO_DO_PERSONAGEM 0.3
 #define QTD_TELAS 5
 #define DESIRED_FPS 60
+#define AUMENTO_VELOCIDADE 5
 
 enum Sentido {normal, cima, baixo, perdeu};
 enum Telas {MENU=0, CREDITOS, PAUSE, GAME_OVER, JOGO, CARREGANDO, CONF, WIN,RANK,LISTA_RANK};

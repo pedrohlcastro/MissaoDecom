@@ -2,7 +2,8 @@ class Movimento{
 	private:
 		ponto pontos;
 		Sentido situacao;
-		float comprimento;
+		float altura;
+		float largura;
 		int gravidadePulo;
 		int alturaPulo;
 		int textura;

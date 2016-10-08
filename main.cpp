@@ -148,7 +148,7 @@ void desenhaTela(){
 	ostringstream convert;
 	convert << mapa->getPontuacao();
 	pontos = convert.str();
-	escreveTexto(GLUT_BITMAP_HELVETICA_18, pontos, 250, 300, 0);
+	escreveTexto(GLUT_BITMAP_HELVETICA_18, pontos, TOPO_TELA-50, TOPO_TELA-50, 0);
 	// fim escreve pontuação
 
 	switch(controleTela->getTela()){
@@ -167,7 +167,7 @@ void desenhaTela(){
 			controleTela->desenhaTela();
 			break;
 		case JOGO:
-			controleTela->desenhaTela(345, 500);
+		controleTela->desenhaTela(CENTRO+232, 400);
 			mapa->desenhaObstaculos(vParedes);
 			pers->desenhaPersonagem();
 			break;

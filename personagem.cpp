@@ -11,8 +11,9 @@ using namespace std;
 //construtor da classe movimento
 Movimento::Movimento(){
 	this->pontos.x = -100;
-	this->pontos.y = 0;
-	this->comprimento = 40;
+	this->pontos.y = CENTRO;
+	this->largura = 30;
+	this->altura = 50;
 	this->gravidadePulo = .5;
 	this->alturaPulo = 120;
 	this->situacao = normal;
@@ -21,8 +22,9 @@ Movimento::Movimento(){
 }
 Movimento::Movimento(std::string textura){
 	this->pontos.x = -100;
-	this->pontos.y = 0;
-	this->comprimento = 40;
+	this->pontos.y = CENTRO;
+	this->largura = 30;
+	this->altura = 50;
 	this->gravidadePulo = .5;
 	this->alturaPulo = 120;
 	this->situacao = normal;
@@ -46,13 +48,13 @@ void Movimento::incPontoY(float inc){
 
 void Movimento::pula(){
 	//cout << "x " << this->pontos.x << "y " << this->pontos.y << endl;
-	if (this->pontos.y > 0 && this->pontos.y <= this->alturaPulo){
+	if (this->pontos.y > CENTRO && this->pontos.y <= this->alturaPulo){
 		this->pontos.y += 14 - this->gravidadePulo;
 		this->gravidadePulo += 1;
 	}
-	if (this->pontos.y <= 0){
+	if (this->pontos.y <= CENTRO){
 		this->gravidadePulo = 0;
-		this->pontos.y = 0;
+		this->pontos.y = CENTRO;
 
 	}
 	if (this->pontos.y > this->alturaPulo){ // CASO ELE CHEGUE NO LIM ESTABELECIDO, CAI.
@@ -66,14 +68,14 @@ bool Movimento::verificaColisao(vector<Obstaculo> vParedes){
 		// colisao por cima
 		float xParede = vParedes[i].getCoord().x;
 		float yParede = vParedes[i].getCoord().y;
-		if (this->pontos.y + this->comprimento + PASSO_DO_PERSONAGEM > yParede && this->pontos.y + PASSO_DO_PERSONAGEM < yParede + vParedes[i].getAltura()){
-			if (!(this->pontos.x + this->comprimento <= xParede || this->pontos.x >= xParede + vParedes[i].getLargura()))
+		if (this->pontos.y + this->largura + PASSO_DO_PERSONAGEM > yParede && this->pontos.y + PASSO_DO_PERSONAGEM < yParede + vParedes[i].getAltura()){
+			if (!(this->pontos.x + this->largura <= xParede || this->pontos.x >= xParede + vParedes[i].getLargura()))
 				return true;
 		}
 
 		// colisao pelo lado esquerdo
 		if (this->pontos.x - PASSO_DO_PERSONAGEM > xParede && this->pontos.x - PASSO_DO_PERSONAGEM < xParede + vParedes[i].getLargura()){
-			if (!(this->pontos.y + this->comprimento <= yParede || this->pontos.y >= yParede + vParedes[i].getAltura()))
+			if (!(this->pontos.y + this->largura <= yParede || this->pontos.y >= yParede + vParedes[i].getAltura()))
 				return true;
 		}
 	}
@@ -104,9 +106,9 @@ void Movimento::desenhaPersonagem(){
     glBegin(GL_POLYGON);
 
 		glTexCoord2f(this->variacaoSprite, 0);						glVertex3f(0, 0, 0);
-        glTexCoord2f(this->variacaoSprite+this->grauVariacao, 0); 	glVertex3f(this->comprimento, 0, 0);
-        glTexCoord2f(this->variacaoSprite+this->grauVariacao, 1); 	glVertex3f(this->comprimento, this->comprimento, 0);
-        glTexCoord2f(this->variacaoSprite, 1);						glVertex3f(0, this->comprimento, 0);
+        glTexCoord2f(this->variacaoSprite+this->grauVariacao, 0); 	glVertex3f(this->largura, 0, 0);
+        glTexCoord2f(this->variacaoSprite+this->grauVariacao, 1); 	glVertex3f(this->largura, this->altura, 0);
+        glTexCoord2f(this->variacaoSprite, 1);						glVertex3f(0, this->altura, 0);
     glEnd();
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);

@@ -1,5 +1,6 @@
 # RaceDecom
-Jogo para competição DECOM-10 anos
+Jogo para competição DECOM-10 anos.
+Pule as linguagens de progamação e ajude o aluno se tornar um verdadeiro ninja e se formar.
 <h2>SISTEMAS SUPORTADOS: LINUX</h2>
 
 <img align="center" src="https://github.com/pedrohlcastro/RaceDecom/blob/master/img/abertura.png?raw=true" width="250" height="300"/>

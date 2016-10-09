@@ -15,7 +15,7 @@
 #define AUMENTO_VELOCIDADE 5
 
 enum Sentido {normal, cima, baixo, perdeu};
-enum Telas {MENU=0, CREDITOS, PAUSE, GAME_OVER, JOGO, CARREGANDO, CONF, WIN,RANK,LISTA_RANK};
+enum Telas {ABERTURA = 0, MENU, CREDITOS, PAUSE, GAME_OVER, CONF, JOGO, RANK,LISTA_RANK};
 
 //estrutura de ponto ou cordenada
 typedef struct Coordenadas{

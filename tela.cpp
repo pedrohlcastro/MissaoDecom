@@ -20,7 +20,7 @@ Tela::Tela(vector<string>endTexturas){
     		cout<<endTexturas[i]<<endl;
   		}
 	}
-	this->telaAtual = MENU;
+	this->telaAtual = ABERTURA;
 	this->posicaoTexturaMenu = 0;
 }
 

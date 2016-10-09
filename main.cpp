@@ -35,13 +35,15 @@ sf::Ftp ftp;
 sf::Ftp::Response response = ftp.connect("rankgamedecom.orgfree.com");
 vector<jogador> rankJogadores;
 bool gravado = false; //gravado arquivo rank
+bool musicaAtivado = true; // musica ativada ou não
 
 void update(int k){
 	//temporário
 	if(pers->verificaColisao(vParedes)){
 		gravado = false;
 		vParedes.clear();
-		musicaBatida.play();
+		if (musicaAtivado)
+			musicaBatida.play();
 		controleTela->setTela(GAME_OVER);
 		mapa->zeraPontuacao();
 		// controleTela->setTela(RANK); // retirei rank por enquanto
@@ -76,10 +78,12 @@ void conectServer(){
 
 void init(){
 	std::vector<string> enderecoTexturas;
+	enderecoTexturas.push_back("img/abertura.png");
 	enderecoTexturas.push_back("img/fundo_menu.png");
 	enderecoTexturas.push_back("img/fundo_creditos.png");
 	enderecoTexturas.push_back("img/fundopause.png");
 	enderecoTexturas.push_back("img/fundo_perdeu.png");
+	enderecoTexturas.push_back("img/fundo_configuracao.png");
 	enderecoTexturas.push_back("img/fundo_cenario.jpg");
 
 	controleTela = new Tela(enderecoTexturas);
@@ -165,9 +169,15 @@ void desenhaTela(){
 		case GAME_OVER:
 			controleTela->desenhaTela();
 			break;
-		case CONF:
+		case ABERTURA:
+			if (tempo == 3)
+				controleTela->setTela(MENU);
+			controleTela->desenhaTela();
 			break;
 		case CREDITOS:
+			controleTela->desenhaTela();
+			break;
+		case CONF:
 			controleTela->desenhaTela();
 			break;
 		case JOGO:
@@ -251,6 +261,23 @@ void teclasJogo(unsigned char tecla,int x,int y){
 				mapa->aumentaTempoCriacao(0,true);
 				glutTimerFunc(500,criaObstaculo,1);
 			}
+			break;
+		case CONF:
+			if (tecla == 27)
+				controleTela->setTela(MENU);
+			if (tecla == 'f' || tecla == 'F')
+				glutFullScreen();
+			if (tecla == 's' || tecla == 's'){
+				if (musicaAtivado){
+					musicaJogo.stop();
+					musicaAtivado = false;
+				}
+				else{
+					musicaJogo.play();
+					musicaAtivado = true;
+				}
+			}
+
 			break;
 		case GAME_OVER:
 			if (tecla == 13)

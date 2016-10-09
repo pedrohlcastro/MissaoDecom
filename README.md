@@ -3,8 +3,8 @@ Jogo para competição DECOM-10 anos
 <h2>SISTEMAS SUPORTADOS: LINUX</h2>
 
 <img align="center" src="https://github.com/pedrohlcastro/RaceDecom/blob/master/img/abertura.png?raw=true" width="250" height="300"/>
-<img align="center" src="https://github.com/pedrohlcastro/CG-o-garra/blob/master/screenshots/img2.png?raw=true" width="250" height="300"/>
-<img align="center" src="https://github.com/pedrohlcastro/CG-o-garra/blob/master/screenshots/im3.png?raw=true" width="250" height="300"/>
+<img align="center" src="https://github.com/pedrohlcastro/RaceDecom/blob/master/img/aa.png?raw=true" width="250" height="300"/>
+<img align="center" src="https://github.com/pedrohlcastro/RaceDecom/blob/master/img/bbb.png?raw=true" width="250" height="300"/>
 
 <h2>COMO RODAR EM LINUX:</h2>
 

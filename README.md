@@ -1,4 +1,4 @@
-# gamedecom
+# MissaoDecom
 Jogo para competição DECOM-10 anos
 <h2>SISTEMAS SUPORTADOS: LINUX</h2>
 
@@ -26,8 +26,8 @@ OU USE
 PARA RODAR O JOGO EM LINUX BASTA SEGUIR OS SEGUINTE PASSOS:
 	
 	1- sudo apt-get install git
-	2- git clone https://github.com/pedrohlcastro/gamedecom.git
-	3- cd gamedecom/
+	2- git clone https://github.com/pedrohlcastro/MissaoDecom.git
+	3- cd MissaoDecom/
 	4- make run
 
 CASO DESEJE COMPILAR O PROGAMA TAMBÉM USE OS COMANDOS DENTRO DA PASTA Makefile/:

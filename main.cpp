@@ -25,9 +25,6 @@ vector<Obstaculo> vParedes;
 
 //Telas
 Tela *controleTela;
-double spriteCenarioBegin = 0.00;
-double spriteCenarioEnd = 0.013888889;
-
 //(((((((RANK)))))))
 // Create a new FTP client
 sf::Ftp ftp;
@@ -225,12 +222,6 @@ void criaObstaculo(int k){
 		Obstaculo *o = new Obstaculo(randomX,CENTRO,randomLargura,ALTURA,mapa->getImagens()[rand() % TIPO_OBJ]);
 		vParedes.push_back(*o);
 		glutTimerFunc(mapa->getTempoCriacao(),criaObstaculo,0);
-		spriteCenarioBegin += 0.013888889;
-		spriteCenarioEnd += 0.013888889;
-		if(spriteCenarioEnd >= 1){
-			spriteCenarioBegin = 0.00;
-			spriteCenarioEnd = 0.013888889;
-		}
 	}
 }
 
@@ -255,8 +246,6 @@ void teclasJogo(unsigned char tecla,int x,int y){
 				exit(0);
 			if(tecla == 'j'){
 				tempo = 0;
-				spriteCenarioBegin = 0.00;
-				spriteCenarioEnd = 0.013888889;
 				controleTela->setTela(JOGO);
 				mapa->aumentaTempoCriacao(0,true);
 				glutTimerFunc(500,criaObstaculo,1);
@@ -277,12 +266,10 @@ void teclasJogo(unsigned char tecla,int x,int y){
 					musicaAtivado = true;
 				}
 			}
-
 			break;
 		case GAME_OVER:
 			if (tecla == 13)
 			controleTela->setTela(MENU);
-			//init(); // reinicia (nao sei se ta certo, nao vi)
 			break;
 		case CREDITOS:
 			if(tecla == ESC)
@@ -293,7 +280,6 @@ void teclasJogo(unsigned char tecla,int x,int y){
 				exit(0);
 			if(tecla == 'p' || tecla  == 'P')
 				controleTela->setTela(PAUSE);
-
 			break;
 		case PAUSE:
 			if(tecla == 'p' || tecla  == 'P'){
@@ -316,7 +302,6 @@ void teclasJogo(unsigned char tecla,int x,int y){
 		case LISTA_RANK:
 			if(tecla == ESC)
 				exit(0);
-
 			if(tecla == 'r' || tecla == 'R'){
 				rankJogadores.clear();
 				controleTela->setTela(MENU);
@@ -361,8 +346,6 @@ void mouseControlCliqueMenu (int button, int state, int x, int y){
     if (controleTela->getTela() == MENU && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
         if (controleTela->getPosicaoTexturaMenu() == 0.0){
             tempo = 0;
-            spriteCenarioBegin = 0.00;
-			spriteCenarioEnd = 0.013888889;
             mapa->aumentaTempoCriacao(0,true);
             controleTela->setTela(JOGO);
 			glutTimerFunc(500,criaObstaculo,1);
@@ -398,16 +381,16 @@ void mouseControl (int x, int y){
 	      controleTela->setPosicaoTexturaMenu(0.50);
 	  if (mousePorcentagemX > 45 && mousePorcentagemX < 65 && mousePorcentagemY > 86 && mousePorcentagemY < 93)
 	      controleTela->setPosicaoTexturaMenu(0.75);
-
 }
+
 void timer(int k){
 	tempo++;
 	glutTimerFunc(1000,timer,5);
 }
+
 int main(int argc, char **argv){
 	//INIT
 	srand(time(0));
-
 	glutInit(&argc,argv);
 	glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
 	//usando buffer duplo

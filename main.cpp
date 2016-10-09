@@ -415,7 +415,7 @@ int main(int argc, char **argv){
 
 	//tamanho da tela
 	glutInitWindowSize(700,700);
-	glutCreateWindow("MissaoDecom");
+	glutCreateWindow("RACE DECOM");
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	init();
 	//callbacks

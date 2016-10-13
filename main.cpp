@@ -292,7 +292,7 @@ void teclasJogo(unsigned char tecla,int x,int y){
 			break;
 		case RANK:
 			if(tecla == ESC){
-				controleTela->setTela(MENU);
+				mapa->zeraPontuacao();
 				rankJogadores.clear();
 				controleTela->setTela(MENU);
 			}

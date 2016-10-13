@@ -13,7 +13,8 @@
 #define QTD_TELAS 5
 #define DESIRED_FPS 60
 #define AUMENTO_VELOCIDADE 5
-
+#define PT 13
+#define PSDB 45
 enum Sentido {normal, cima, baixo, perdeu};
 enum Telas {ABERTURA = 0, MENU, CREDITOS, PAUSE, GAME_OVER, CONF, JOGO, RANK,LISTA_RANK};
 

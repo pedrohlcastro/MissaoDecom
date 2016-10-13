@@ -42,8 +42,6 @@ void update(int k){
 		if (musicaAtivado)
 			musicaBatida.play();
 		controleTela->setTela(GAME_OVER);
-		mapa->zeraPontuacao();
-		// controleTela->setTela(RANK); // retirei rank por enquanto
 	}
 	if (controleTela->getTela() == JOGO){
 		vParedes = mapa->move(vParedes);
@@ -82,6 +80,8 @@ void init(){
 	enderecoTexturas.push_back("img/fundo_perdeu.png");
 	enderecoTexturas.push_back("img/fundo_configuracao.png");
 	enderecoTexturas.push_back("img/fundo_cenario.jpg");
+	enderecoTexturas.push_back("img/rankingconfirmacao.png");
+	enderecoTexturas.push_back("img/ranking.png");
 
 	controleTela = new Tela(enderecoTexturas);
 	pers = new Movimento("img/pers.png");
@@ -140,6 +140,7 @@ void montaRank(){
 		nomeJogador.clear();
 		ftp.upload("rank.txt", "/", sf::Ftp::Ascii);
 	}
+	mapa->zeraPontuacao();
 }
 
 //func de desenha na tela
@@ -183,25 +184,27 @@ void desenhaTela(){
 			pers->desenhaPersonagem();
 			break;
 		case RANK:
+			controleTela->desenhaTela();
 			escreveTexto(GLUT_BITMAP_HELVETICA_18, "Digite Seu Nome para RANK:", ESQUERDA_TELA + 20, 30, 0);
 			escreveTexto(GLUT_BITMAP_HELVETICA_18, nomeJogador, ESQUERDA_TELA + 35, 0, 0);
-			escreveTexto(GLUT_BITMAP_HELVETICA_18, "Aperte ENTER e Aguarde...!!!", CENTRO, FUNDO_TELA + 20, 0);
+			//escreveTexto(GLUT_BITMAP_HELVETICA_18, "Aperte ENTER e Aguarde...!!!", CENTRO, FUNDO_TELA + 70, 0);
 			break;
 		case LISTA_RANK:
-			escreveTexto(GLUT_BITMAP_HELVETICA_18, "RANK:", ESQUERDA_TELA + 20, 200, 0);
+			controleTela->desenhaTela();
+			//escreveTexto(GLUT_BITMAP_HELVETICA_18, "RANK:", ESQUERDA_TELA + 20, 200, 0);
 			string line;
 			int conta = 0;
-			int desloca = 35;
+			int desloca = 15;
 			ifstream myfile1 ("rank.txt");
 			if (myfile1.is_open()){
 				while ( getline (myfile1,line) || conta == 6){
 					conta++;
-					escreveTexto(GLUT_BITMAP_HELVETICA_18,line , ESQUERDA_TELA + desloca, 200 - (conta * 30), 0);
+					escreveTexto(GLUT_BITMAP_HELVETICA_18,line , ESQUERDA_TELA + desloca + PSDB, CENTRO + 3 * PSDB - (conta * PT), 0);
 					line.clear();
-					if(desloca == 35)
-						desloca = 45;
+					if(desloca == 15)
+						desloca = 25;
 					else
-						desloca = 35;
+						desloca = 15;
 				}
 				myfile1.close();
   			}
@@ -268,8 +271,8 @@ void teclasJogo(unsigned char tecla,int x,int y){
 			}
 			break;
 		case GAME_OVER:
-			if (tecla == 13)
-			controleTela->setTela(MENU);
+			if (tecla == ENTER)
+				controleTela->setTela(RANK);
 			break;
 		case CREDITOS:
 			if(tecla == ESC)
@@ -288,8 +291,11 @@ void teclasJogo(unsigned char tecla,int x,int y){
 			}
 			break;
 		case RANK:
-			if(tecla == ESC)
-				exit(0);
+			if(tecla == ESC){
+				controleTela->setTela(MENU);
+				rankJogadores.clear();
+				controleTela->setTela(MENU);
+			}
 			if(tecla == BACKSPACE && nomeJogador.size() > 0)
 				nomeJogador.erase(nomeJogador.size()-1);
 			else if(tecla == ENTER){
@@ -300,9 +306,8 @@ void teclasJogo(unsigned char tecla,int x,int y){
 				nomeJogador+=tecla;
 			break;
 		case LISTA_RANK:
-			if(tecla == ESC)
-				exit(0);
-			if(tecla == 'r' || tecla == 'R'){
+			if(tecla == ESC){
+				controleTela->setTela(MENU);
 				rankJogadores.clear();
 				controleTela->setTela(MENU);
 			}
